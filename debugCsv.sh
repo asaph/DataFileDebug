@@ -1,2 +1,3 @@
 #!/bin/bash
-php debugCsv.php "$@"
+LOC=$(dirname $BASH_SOURCE)
+php $LOC/debugCsv.php "$@"

@@ -1,2 +1,3 @@
 #!/bin/bash
-php debugJson.php "$@"
+LOC=$(dirname $BASH_SOURCE)
+php $LOC/debugJson.php "$@"
