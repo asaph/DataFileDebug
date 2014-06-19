@@ -1,23 +1,32 @@
 <?php
 if ($argc < 2) {
-	echo "Usage: php " . basename( __FILE__) . " filename [filename] [filename]\n";
+	echo "Usage: php " . basename( __FILE__) . " [-d delimiter] filename [[-d delimiter] filename] [[-d delimiter] filename]\n";
 	exit;
 }
 for ($j=1; $j<$argc; $j++) {
-	$file = $argv[$j];
-	$ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-	switch($ext) {
-		case 'csv':
-			$delimiter = ',';
-			break;
-		case 'tsv':
-			$delimiter = "\t";
-			break;
-		default:
-			echo "Skipping " . $file . "\n";
-			continue;
+        $arg = $argv[$j];
+        if ($arg == '-d') {
+		$delimiter = $argv[++$j];
+                $arg = $argv[++$j];
+	} else {
+		$delimiter = null;
 	}
-	echo $file . "\n";
+	$file = $arg;
+	if ($delimiter === null) {
+		$ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+		switch($ext) {
+			case 'csv':
+				$delimiter = ',';
+				break;
+			case 'tsv':
+				$delimiter = "\t";
+				break;
+			default:
+				echo "Skipping " . $file . "\n";
+				continue;
+		}
+	}
+	echo $file . ' delimited by ' . $delimiter . "\n";
 	$csv = file_get_contents($file);
 	$lines = preg_split('/[\r\n]+/', $csv, -1, PREG_SPLIT_NO_EMPTY);
 	if (!empty($lines)) {
